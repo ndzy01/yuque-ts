@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { useRequest } from 'ahooks';
 
 const instance = axios.create({
-  timeout: 1000,
+  timeout: 1000 * 300,
   baseURL: '/ndzy/api/v2',
   headers: {
     'Content-Type': 'application/json',
