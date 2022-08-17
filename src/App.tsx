@@ -190,7 +190,7 @@ function App() {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            marginBottom: 8,
+            margin: '8px 0',
           }}
         >
           <Button size="small" type="primary" onClick={init}>
