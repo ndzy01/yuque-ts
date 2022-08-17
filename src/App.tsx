@@ -64,7 +64,7 @@ const List = ({
     <div
       ref={containerRef}
       style={{
-        height: originalList.length < 10 ? originalList.length * 60 : 600,
+        height: originalList.length < 10 ? originalList.length * 60 : 800,
         overflow: 'auto',
       }}
     >
@@ -142,11 +142,13 @@ function App() {
           setState({ progress: Math.floor(progress) });
 
           res.push(
-            (data.data?.data || []).map((item: DocRecord) => ({
-              ...item,
-              docTitle: ele.name,
-              docSlug: ele.slug,
-            })),
+            (data.data?.data || [])
+              .map((item: DocRecord) => ({
+                ...item,
+                docTitle: ele.name,
+                docSlug: ele.slug,
+              }))
+              .resolved(),
           );
         }
 
