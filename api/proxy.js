@@ -1,4 +1,3 @@
-// 该服务为 vercel serve跨域处理
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = (req, res) => {
@@ -7,7 +6,7 @@ module.exports = (req, res) => {
   if (req.url.startsWith('/ndzy')) {
     target = 'https://www.yuque.com';
   }
-  // 创建代理对象并转发请求
+
   createProxyMiddleware({
     target,
     changeOrigin: true,

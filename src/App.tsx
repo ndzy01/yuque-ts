@@ -1,23 +1,26 @@
 import { useRef } from 'react';
 import { useMount, useSetState, useVirtualList } from 'ahooks';
-import { Button, Drawer, Space, Tag } from 'antd';
+import { Button, Drawer, Space, Tag, Tooltip, Spin, Progress } from 'antd';
 import { useReq } from './http';
 
 interface DocRecord {
   id: string;
   slug: string;
   title: string;
+  description?: string;
   docTitle?: string;
   docSlug?: string;
 }
 
-const Detail = ({ url }: { url: string }) => {
+const Detail = ({ url, title }: { url: string; title: string }) => {
   const [state, setState] = useSetState<{
     open: Boolean;
   }>({ open: false });
   return (
     <>
-      <Button onClick={() => setState({ open: true })}>查看</Button>
+      <Button size="small" onClick={() => setState({ open: true })}>
+        查看
+      </Button>
       <Drawer
         destroyOnClose
         title="详情"
@@ -27,7 +30,7 @@ const Detail = ({ url }: { url: string }) => {
         width="100%"
       >
         <a href={url} target="_blank" rel="noreferrer">
-          {url}
+          {title}
         </a>
         <iframe
           title={`${new Date().valueOf()}`}
@@ -79,9 +82,12 @@ const List = ({
             }}
           >
             <Space>
-              <Tag>{ele.data.docTitle}</Tag>
-              <Tag>{ele.data.title}</Tag>
+              <Tag color="cyan">{ele.data.docTitle}</Tag>
+              <Tooltip title={ele.data.description}>
+                <Tag color="#108ee9">{ele.data.title}</Tag>
+              </Tooltip>
               <Detail
+                title={ele.data.title}
                 url={`https://www.yuque.com/${uid}/${ele.data.docSlug}/${ele.data.slug}`}
               />
             </Space>
@@ -96,7 +102,8 @@ function App() {
     list: DocRecord[][];
     uid: string;
     loading: Boolean;
-  }>({ list: [], uid: '', loading: false });
+    progress: number;
+  }>({ list: [], uid: '', loading: false, progress: 0 });
   const { runAsync } = useReq();
 
   useMount(async () => {
@@ -107,22 +114,32 @@ function App() {
         method: 'GET',
         data: {},
       });
+
+      setState({ progress: 10 });
+
       const d2 = await runAsync({
         url: `/users/${d1.data.data.id}/repos`,
         method: 'GET',
         data: {},
       });
 
+      setState({ progress: 20 });
+
       if (d2.data.data.length > 0) {
         let res: DocRecord[][] = [];
+        const average = (0.8 / d2.data.data.length) * 100;
+        let progress = 20;
 
         for (let index = 0; index < d2.data.data.length; index++) {
+          progress += average;
           const ele = d2.data.data[index];
           const data = await runAsync({
             url: `/repos/${ele.id}/docs`,
             method: 'GET',
             data: {},
           });
+
+          setState({ progress: Math.floor(progress) });
 
           res.push(
             (data.data?.data || []).map((item: DocRecord) => ({
@@ -142,10 +159,35 @@ function App() {
 
   return (
     <div>
+      {state.loading && (
+        <div
+          style={{
+            height: '100vh',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <div style={{ width: 300 }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Spin size="large" />
+            </div>
+            <Progress percent={state.progress} status="active" />
+          </div>
+        </div>
+      )}
       {state.list.length > 0 &&
         state.list.map((l, index) =>
           l.length ? (
-            <List key={index} originalList={l} uid={state.uid} />
+            <div key={index}>
+              <List originalList={l} uid={state.uid} />
+            </div>
           ) : (
             <div key={index} style={{ border: '1px solid pink' }} />
           ),
