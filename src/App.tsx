@@ -18,7 +18,7 @@ const Detail = ({ url, title }: { url: string; title: string }) => {
   }>({ open: false });
   return (
     <>
-      <Button size="small" onClick={() => setState({ open: true })}>
+      <Button size="small" type="link" onClick={() => setState({ open: true })}>
         查看
       </Button>
       <Drawer
@@ -84,7 +84,7 @@ const List = ({
             <Space>
               <Tag color="cyan">{ele.data.docTitle}</Tag>
               <Tooltip title={ele.data.description}>
-                <Tag color="#108ee9">{ele.data.title}</Tag>
+                <Tag color="geekblue">{ele.data.title}</Tag>
               </Tooltip>
               <Detail
                 title={ele.data.title}
