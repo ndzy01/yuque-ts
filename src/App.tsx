@@ -106,8 +106,8 @@ function App() {
   }>({ list: [], uid: '', loading: false, progress: 0 });
   const { runAsync } = useReq();
 
-  useMount(async () => {
-    setState({ loading: true });
+  const init = async () => {
+    setState({ loading: true, progress: 0 });
     try {
       const d1 = await runAsync({
         url: '/user',
@@ -155,7 +155,9 @@ function App() {
     } catch (error) {
       setState({ list: [], uid: '', loading: false });
     }
-  });
+  };
+
+  useMount(() => init());
 
   return (
     <div>
@@ -186,6 +188,9 @@ function App() {
         state.list.map((l, index) =>
           l.length ? (
             <div key={index}>
+              <Button size="small" type="primary" onClick={init}>
+                刷新
+              </Button>
               <List originalList={l} uid={state.uid} />
             </div>
           ) : (
