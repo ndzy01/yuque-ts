@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { useMount, useSetState, useVirtualList } from 'ahooks';
 import { Button, Drawer, Space, Tag, Tooltip, Spin, Progress } from 'antd';
+import { sortBy } from 'lodash';
 import { useReq } from './http';
 
 interface DocRecord {
@@ -97,6 +98,7 @@ const List = ({
     </div>
   );
 };
+
 function App() {
   const [state, setState] = useSetState<{
     list: DocRecord[][];
@@ -141,15 +143,13 @@ function App() {
 
           setState({ progress: Math.floor(progress) });
 
-          res.push(
-            (data.data?.data || [])
-              .map((item: DocRecord) => ({
-                ...item,
-                docTitle: ele.name,
-                docSlug: ele.slug,
-              }))
-              .resolved(),
-          );
+          const doc = (data.data?.data || []).map((item: DocRecord) => ({
+            ...item,
+            docTitle: ele.name,
+            docSlug: ele.slug,
+          }));
+
+          res.push(sortBy(doc, 'created_at'));
         }
 
         setState({ list: res, uid: d1.data.data.id, loading: false });
