@@ -1,5 +1,4 @@
-import { useRef } from 'react';
-import { useMount, useSetState, useVirtualList } from 'ahooks';
+import { useMount, useSetState } from 'ahooks';
 import { Button, Drawer, Space, Tag, Tooltip, Spin, Progress } from 'antd';
 import { sortBy } from 'lodash';
 import { useReq } from './http';
@@ -53,26 +52,17 @@ const List = ({
   originalList: DocRecord[];
   uid: string;
 }) => {
-  const containerRef = useRef(null);
-  const wrapperRef = useRef(null);
-  const [list] = useVirtualList(originalList, {
-    containerTarget: containerRef,
-    wrapperTarget: wrapperRef,
-    itemHeight: 60,
-    overscan: 10,
-  });
   return (
     <div
-      ref={containerRef}
       style={{
         height: originalList.length < 10 ? originalList.length * 60 : 800,
         overflow: 'auto',
       }}
     >
-      <div ref={wrapperRef}>
-        {list.map((ele) => (
+      <div>
+        {originalList.map((ele, index) => (
           <div
-            key={ele.index}
+            key={index}
             style={{
               height: 52,
               display: 'flex',
@@ -83,13 +73,13 @@ const List = ({
             }}
           >
             <Space>
-              <Tag color="cyan">{ele.data.docTitle}</Tag>
-              <Tooltip title={ele.data.description}>
-                <Tag color="geekblue">{ele.data.title}</Tag>
+              <Tag color="cyan">{ele.docTitle}</Tag>
+              <Tooltip title={ele.description}>
+                <Tag color="geekblue">{ele.title}</Tag>
               </Tooltip>
               <Detail
-                title={ele.data.title}
-                url={`https://www.yuque.com/${uid}/${ele.data.docSlug}/${ele.data.slug}`}
+                title={ele.title}
+                url={`https://www.yuque.com/${uid}/${ele.docSlug}/${ele.slug}`}
               />
             </Space>
           </div>
@@ -203,7 +193,13 @@ function App() {
       {state.list.length > 0 &&
         state.list.map((l, index) =>
           l.length ? (
-            <div key={index}>
+            <div
+              style={{
+                height: l.length < 10 ? l.length * 60 + 20 : 820,
+                borderBottom: '1px solid pink',
+              }}
+              key={index}
+            >
               <List originalList={l} uid={state.uid} />
             </div>
           ) : (
