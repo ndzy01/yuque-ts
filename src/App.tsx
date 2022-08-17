@@ -184,13 +184,23 @@ function App() {
           </div>
         </div>
       )}
+      {!state.loading && (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Button size="small" type="primary" onClick={init}>
+            刷新
+          </Button>
+        </div>
+      )}
       {state.list.length > 0 &&
         state.list.map((l, index) =>
           l.length ? (
             <div key={index}>
-              <Button size="small" type="primary" onClick={init}>
-                刷新
-              </Button>
               <List originalList={l} uid={state.uid} />
             </div>
           ) : (
