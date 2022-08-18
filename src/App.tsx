@@ -1,5 +1,14 @@
 import { useMount, useSetState } from 'ahooks';
-import { Button, Drawer, Space, Tag, Tooltip, Spin, Progress } from 'antd';
+import {
+  Button,
+  Drawer,
+  Space,
+  Tag,
+  Tooltip,
+  Spin,
+  Progress,
+  Collapse,
+} from 'antd';
 import { sortBy } from 'lodash';
 import { useReq } from './http';
 
@@ -11,6 +20,8 @@ interface DocRecord {
   docTitle?: string;
   docSlug?: string;
 }
+
+const { Panel } = Collapse;
 
 const Detail = ({ url, title }: { url: string; title: string }) => {
   const [state, setState] = useSetState<{
@@ -53,38 +64,31 @@ const List = ({
   uid: string;
 }) => {
   return (
-    <div
-      style={{
-        height: originalList.length < 10 ? originalList.length * 60 : 800,
-        overflow: 'auto',
-      }}
-    >
-      <div>
-        {originalList.map((ele, index) => (
-          <div
-            key={index}
-            style={{
-              height: 52,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              border: '1px solid #e8e8e8',
-              margin: '4 0',
-            }}
-          >
-            <Space>
-              <Tag color="cyan">{ele.docTitle}</Tag>
-              <Tooltip title={ele.description}>
-                <Tag color="geekblue">{ele.title}</Tag>
-              </Tooltip>
-              <Detail
-                title={ele.title}
-                url={`https://www.yuque.com/${uid}/${ele.docSlug}/${ele.slug}`}
-              />
-            </Space>
-          </div>
-        ))}
-      </div>
+    <div>
+      {originalList.map((ele, index) => (
+        <div
+          key={index}
+          style={{
+            height: 52,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            border: '1px solid #e8e8e8',
+            margin: '4 0',
+          }}
+        >
+          <Space>
+            <Tag color="cyan">{ele.docTitle}</Tag>
+            <Tooltip title={ele.description}>
+              <Tag color="geekblue">{ele.title}</Tag>
+            </Tooltip>
+            <Detail
+              title={ele.title}
+              url={`https://www.yuque.com/${uid}/${ele.docSlug}/${ele.slug}`}
+            />
+          </Space>
+        </div>
+      ))}
     </div>
   );
 };
@@ -190,22 +194,17 @@ function App() {
           </Button>
         </div>
       )}
-      {state.list.length > 0 &&
-        state.list.map((l, index) =>
-          l.length ? (
-            <div
-              style={{
-                height: l.length < 10 ? l.length * 60 + 20 : 820,
-                borderBottom: '1px solid pink',
-              }}
-              key={index}
-            >
-              <List originalList={l} uid={state.uid} />
-            </div>
-          ) : (
-            <div key={index} style={{ border: '1px solid pink' }} />
-          ),
-        )}
+      {state.list.length > 0 && (
+        <Collapse>
+          {state.list.map((l, index) =>
+            l.length ? (
+              <Panel header={l[0].docTitle} key={index}>
+                <List originalList={l} uid={state.uid} />
+              </Panel>
+            ) : null,
+          )}
+        </Collapse>
+      )}
     </div>
   );
 }
