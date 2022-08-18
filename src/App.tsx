@@ -78,9 +78,8 @@ const List = ({
           }}
         >
           <Space>
-            <Tag color="cyan">{ele.docTitle}</Tag>
             <Tooltip title={ele.description}>
-              <Tag color="geekblue">{ele.title}</Tag>
+              <Tag color="cyan">{ele.title}</Tag>
             </Tooltip>
             <Detail
               title={ele.title}
