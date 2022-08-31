@@ -9,6 +9,7 @@ import {
   Progress,
   Collapse,
 } from 'antd';
+import { SyncOutlined, EyeOutlined } from '@ant-design/icons';
 import { sortBy } from 'lodash';
 import { useReq } from './http';
 
@@ -188,9 +189,14 @@ function App() {
             margin: '8px 0',
           }}
         >
-          <Button size="small" type="primary" onClick={init}>
-            刷新
-          </Button>
+          <Space>
+            <SyncOutlined onClick={init} />
+            <EyeOutlined
+              onClick={() => {
+                window.open('https://www.yuque.com/u22409297/aqgf01/botzrc');
+              }}
+            />
+          </Space>
         </div>
       )}
       {state.list.length > 0 && (
