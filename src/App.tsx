@@ -219,6 +219,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Space } from 'antd';
 import Link from './components/Link';
+import Code from './code';
 
 const App = () => {
   return (
@@ -231,7 +232,7 @@ const App = () => {
       </div>
       <Routes>
         <Route path="/" element={<>主页</>}></Route>
-        <Route path="/code" element={<>code</>}></Route>
+        <Route path="/code" element={<Code />}></Route>
       </Routes>
     </BrowserRouter>
   );
