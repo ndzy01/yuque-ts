@@ -225,12 +225,13 @@ const App = () => {
     <BrowserRouter>
       <div className="center my-8">
         <Space>
-          <Link name="Algorithm" url="/algorithm"></Link>
+          <Link name="主页" url="/"></Link>
           <Link name="Code" url="/code"></Link>
         </Space>
       </div>
       <Routes>
-        <Route path="/" element={<>111</>}></Route>
+        <Route path="/" element={<>主页</>}></Route>
+        <Route path="/code" element={<>code</>}></Route>
       </Routes>
     </BrowserRouter>
   );
