@@ -28,12 +28,12 @@ const Code = () => {
 
   const openModal = () => setState({ open: true });
 
-  const download = () => {
-    const blob = new Blob([JSON.stringify(state.list)], {
+  const download = (list: any[]) => {
+    const blob = new Blob([JSON.stringify(list)], {
       type: 'text/plain;charset=utf-8',
     });
 
-    FileSaver.saveAs(blob, 'code.json');
+    FileSaver.saveAs(blob, `code-${new Date().valueOf()}.json`);
   };
 
   const add = (name: string) => {
@@ -127,7 +127,23 @@ const Code = () => {
         ghost={false}
         onBack={backHome}
         title="code"
-        subTitle="编码中"
+        subTitle={
+          <Button
+            size="small"
+            type="link"
+            onClick={() =>
+              download([
+                {
+                  id: '95e058ba-6743-4b48-8ac7-304183e5ee94',
+                  name: '示例',
+                  code: '// 示例',
+                },
+              ])
+            }
+          >
+            模板
+          </Button>
+        }
         extra={[
           <Button
             disabled={state.list.length === 0}
@@ -138,7 +154,11 @@ const Code = () => {
             新增
           </Button>,
           state.list.length ? (
-            <Button size="small" type="link" onClick={download}>
+            <Button
+              size="small"
+              type="link"
+              onClick={() => download(state.list)}
+            >
               下载
             </Button>
           ) : (
